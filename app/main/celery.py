@@ -10,6 +10,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     "send-spam-every-1-minute": {
         "task": "contact.tasks.send_beat_mail",
-        "schedule": crontab(minute="*/1"),
+        "schedule": crontab(minute="*/20"),
     },
 }

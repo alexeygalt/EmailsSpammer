@@ -17,7 +17,8 @@ services:
     command: >
       sh -c "python manage.py makemigrations && 
       python manage.py migrate 
-      && poetry run python -u manage.py runserver 0.0.0.0:8000"
+      && poetry run python -u manage.py runserver 0.0.0.0:8000
+      && celery -A main flower --port=5555"
 
   worker:
     restart: always
@@ -39,3 +40,16 @@ services:
       - webapp
       - worker
     command: 'celery -A main beat -l info'
+
+
+  flower:
+    restart: always
+    build: .
+    volumes:
+      - ./:/app
+    ports:
+      - 5555:5555
+    depends_on:
+      - worker
+      - redis
+    command: celery -A main flower
